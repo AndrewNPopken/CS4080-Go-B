@@ -15,10 +15,6 @@ import (
 	//"math"
 )
 
-func fullRender(){
-
-}
-
 func main() {
 	ScreenWidth, ScreenHeight := 480, 360
 	driver.Main(func(s screen.Screen) {
