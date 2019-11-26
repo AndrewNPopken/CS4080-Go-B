@@ -1,0 +1,58 @@
+Exception 0xc0000005 0x1 0xc000495e48 0x7ffc805fc43a
+PC=0x7ffc805fc43a
+
+syscall.Syscall(0x7ffc805fc260, 0x1, 0xc000495e38, 0x0, 0x0, 0x0, 0x0, 0x0)
+        c:/go/src/runtime/syscall_windows.go:188 +0xfa
+golang.org/x/exp/shiny/driver/internal/win32._DispatchMessage(0xc000495e38, 0x0)
+        C:/Users/krady/go/src/golang.org/x/exp/shiny/driver/internal/win32/zsyscall_windows.go:131 +0x67
+golang.org/x/exp/shiny/driver/internal/win32.Main(0xc000044530, 0x0, 0x0)
+        C:/Users/krady/go/src/golang.org/x/exp/shiny/driver/internal/win32/win32.go:514 +0x157
+golang.org/x/exp/shiny/driver/windriver.Main(0xc000060180)
+        C:/Users/krady/go/src/golang.org/x/exp/shiny/driver/windriver/windriver.go:22 +0x62
+golang.org/x/exp/shiny/driver.main(...)
+        C:/Users/krady/go/src/golang.org/x/exp/shiny/driver/driver_windows.go:13
+golang.org/x/exp/shiny/driver.Main(...)
+        C:/Users/krady/go/src/golang.org/x/exp/shiny/driver/driver.go:24
+main.main()
+        C:/Users/krady/OneDrive/Desktop/GoPrograms/TestPrograms/RayTracing/shinyBasicScreen.go:23 +0xc6
+
+goroutine 19 [syscall, locked to thread]:
+syscall.Syscall6(0x7ffc805fbbe0, 0x4, 0xc1840, 0x403, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, ...)
+        c:/go/src/runtime/syscall_windows.go:201 +0xfa
+golang.org/x/exp/shiny/driver/internal/win32.sendMessage(0xc1840, 0xc000000403, 0x0, 0x0, 0x4e6460)
+        C:/Users/krady/go/src/golang.org/x/exp/shiny/driver/internal/win32/zsyscall_windows.go:94 +0x7d
+golang.org/x/exp/shiny/driver/internal/win32.SendMessage(0xc1840, 0xc000000403, 0x0, 0x0, 0x5e90a0)
+        C:/Users/krady/go/src/golang.org/x/exp/shiny/driver/internal/win32/win32.go:468 +0x4e
+golang.org/x/exp/shiny/driver/internal/win32.SendScreenMessage(0x403, 0x0, 0x0, 0x0)
+        C:/Users/krady/go/src/golang.org/x/exp/shiny/driver/internal/win32/win32.go:314 +0x50
+golang.org/x/exp/shiny/driver/internal/win32.screenWindowWndProc.func1()
+        C:/Users/krady/go/src/golang.org/x/exp/shiny/driver/internal/win32/win32.go:299 +0x44
+created by golang.org/x/exp/shiny/driver/internal/win32.screenWindowWndProc
+        C:/Users/krady/go/src/golang.org/x/exp/shiny/driver/internal/win32/win32.go:297 +0x123
+
+goroutine 8 [chan send]:
+main.main.func1.1(0xc000042060, 0x539700, 0xc0000a2000)
+        C:/Users/krady/OneDrive/Desktop/GoPrograms/TestPrograms/RayTracing/shinyBasicScreen.go:114 +0x64
+created by main.main.func1
+        C:/Users/krady/OneDrive/Desktop/GoPrograms/TestPrograms/RayTracing/shinyBasicScreen.go:112 +0x877
+rax     0x0
+rbx     0x2737be0
+rcx     0x2361040
+rdi     0x0
+rsi     0xc000495e38
+rbp     0xc000495d30
+rsp     0x80fd90
+r8      0x80fc90
+r9      0x39b0bf0
+r10     0xffffffff
+r11     0x80fd60
+r12     0x0
+r13     0x45d27a
+r14     0x14
+r15     0x2030000
+rip     0x7ffc805fc43a
+rflags  0x10246
+cs      0x33
+fs      0x53
+gs      0x2b
+exit status 2

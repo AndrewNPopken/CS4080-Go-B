@@ -18,6 +18,7 @@ import (
 )
 
 func main() {
+	rand.Seed(time.Now().UnixNano())
 	ScreenWidth, ScreenHeight := 480, 360
 	driver.Main(func(s screen.Screen) {
 		nwo := screen.NewWindowOptions{Title:"Window", Height:ScreenHeight, Width:ScreenWidth}
@@ -58,8 +59,20 @@ func main() {
 		
 		//create the scene (objects and lights)
 		var objects []objects3d.Object
-		for i:=0;i<10;i++ {
-			objects = append(objects, objects3d.Sphere{Position: space3d.Vec3f{rand.Float64() * 10 + 2, rand.Float64() * 10 + 2, rand.Float64() * 10 + 2}, Radius: rand.Float64() * 2 + 0.5, Color: color.RGBA{uint8(rand.Intn(255)), uint8(rand.Intn(255)), uint8(rand.Intn(255)) * 255, 255}})
+		for i:=0;i<15;i++ {
+			nextPosition := space3d.Vec3f{rand.Float64() * 20 - 10, rand.Float64() * 3, rand.Float64() * 20 - 10}
+			if nextPosition.X > 0 {
+				nextPosition.X += 3
+			} else {
+				nextPosition.X -= 3
+			}
+			if nextPosition.Z > 0 {
+				nextPosition.Z += 3
+			} else {
+				nextPosition.Z -= 3
+			}
+			next := objects3d.Sphere{Position: nextPosition, Radius: rand.Float64() * 2 + 0.5, Color: color.RGBA{uint8(rand.Intn(255)), uint8(rand.Intn(255)), uint8(rand.Intn(255)) * 255, 255}}
+			objects = append(objects, next)
 		}
 		var lights []camera3d.Light
 		var camera camera3d.Camera
@@ -68,7 +81,7 @@ func main() {
 		//set up options
 		//var Width, Height, Depth int
 		//var FieldOfView float64
-		options := camera3d.Options{Width: ScreenWidth, Height: ScreenHeight, Depth: 0, FieldOfView: 90.0}
+		options := camera3d.Options{Width: ScreenWidth, Height: ScreenHeight, Depth: 0, FieldOfView: 60.0}
 
 		//render
 		render := camera3d.Render(&camera, objects, lights, &options)
@@ -89,7 +102,7 @@ func main() {
 		}
 		*/
 		onesecond, _ := time.ParseDuration("1s")
-		minFrameRate, _ := time.ParseDuration("0.1s")
+		minFrameRate, _ := time.ParseDuration("1s")
 		timenext := time.Now().Add(onesecond)
 		timelast := time.Now()
 		timedelta := time.Since(timelast).Seconds()

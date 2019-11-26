@@ -10,7 +10,7 @@ var Infinity = math.MaxFloat64
 
 type Object interface {
 	//bool is if there is an intersection, float64 is distance from origin to point hit (if hit)
-	Intersect(origin space3d.Vec3f, direction space3d.Vec3f) (bool, float64)
+	Intersect(origin, direction * space3d.Vec3f) (bool, float64)
 	GetColor() color.RGBA
 	GetSurfaceNormal(pointOfIntersection space3d.Vec3f) space3d.Vec3f
 ////The following only matter if we implement textures
@@ -36,14 +36,14 @@ func (Object ob) BoundingSphere() Sphere {
 */
 
 
-func (ob Sphere) Intersect (origin space3d.Vec3f, direction space3d.Vec3f) (bool, float64) {
-	cameraToObject := ob.Position.Minus(&origin)
-	camDirDot := cameraToObject.DotProduct(&direction)
+func (ob Sphere) Intersect (origin, direction * space3d.Vec3f) (bool, float64) {
+	cameraToObject := ob.Position.Minus(*origin)
+	camDirDot := cameraToObject.DotProduct(*direction)
 	if camDirDot < 0 {
 	//sphere is behind camera
 		return false, Infinity
 	}
-	magnitudeDifference := cameraToObject.DotProduct(&cameraToObject) - camDirDot * camDirDot
+	magnitudeDifference := cameraToObject.DotProduct(cameraToObject) - camDirDot * camDirDot
 	radiusSquared := ob.Radius * ob.Radius
 	if magnitudeDifference > radiusSquared {
 	//ray misses the sphere
@@ -67,12 +67,12 @@ func (ob Sphere) Intersect (origin space3d.Vec3f, direction space3d.Vec3f) (bool
 	return false, Infinity
 }
 
-func (ob Sphere) 	GetColor() color.RGBA {
+func (ob Sphere) GetColor() color.RGBA {
 	return ob.Color
 }
 
 func (ob Sphere) GetSurfaceNormal(pointOfIntersection space3d.Vec3f) space3d.Vec3f {
-	temp := pointOfIntersection.Minus(&(ob.Position))
+	temp := pointOfIntersection.Minus(ob.Position)
 	temp.Normalize()
 	return temp
 }

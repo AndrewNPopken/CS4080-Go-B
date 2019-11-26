@@ -7,55 +7,55 @@ type Vec3f struct {
 	X, Y, Z float64
 }
 
-func (v * Vec3f) Plus (o * Vec3f) Vec3f {
+func (v Vec3f) Plus (o Vec3f) Vec3f {
 	return Vec3f{ X: v.X + o.X, Y: v.Y + o.Y, Z: v.Z + o.Z }
 }
 
-func (v * Vec3f) AddAndSet (o * Vec3f) {
+func (v * Vec3f) AddAndSet (o Vec3f) {
 	v.X, v.Y, v.Z = v.X + o.X, v.Y + o.Y, v.Z + o.Z
 }
 
-func (v * Vec3f) Minus (o * Vec3f) Vec3f {
+func (v Vec3f) Minus (o Vec3f) Vec3f {
 	return Vec3f{ X: v.X - o.X, Y: v.Y - o.Y, Z: v.Z - o.Z }
 }
 
-func (v * Vec3f) SubtractAndSet (o * Vec3f) {
+func (v * Vec3f) SubtractAndSet (o Vec3f) {
 	v.X, v.Y, v.Z = v.X - o.X, v.Y - o.Y, v.Z - o.Z
 }
 
-func (v * Vec3f) MultiplyBy (o * float64) Vec3f {
-	return Vec3f{ X: v.X * *o, Y: v.Y * *o, Z: v.Z * *o }
+func (v Vec3f) MultiplyBy (o float64) Vec3f {
+	return Vec3f{ X: v.X * o, Y: v.Y * o, Z: v.Z * o }
 }
 
-func (v * Vec3f) MultiplyAndSet (o * float64) {
-	v.X, v.Y, v.Z = v.X * *o, v.Y * *o, v.Z * *o
+func (v * Vec3f) MultiplyAndSet (o float64) {
+	v.X, v.Y, v.Z = v.X * o, v.Y * o, v.Z * o
 }
 
-func (v * Vec3f) DivideBy (o * float64) Vec3f {
-	return Vec3f{ X: v.X / *o, Y: v.Y / *o, Z: v.Z / *o }
+func (v Vec3f) DivideBy (o float64) Vec3f {
+	return Vec3f{ X: v.X / o, Y: v.Y / o, Z: v.Z / o }
 }
 
-func (v * Vec3f) DivideAndSet (o * float64) {
-	v.X, v.Y, v.Z = v.X / *o, v.Y / *o, v.Z / *o
+func (v * Vec3f) DivideAndSet (o float64) {
+	v.X, v.Y, v.Z = v.X / o, v.Y / o, v.Z / o
 }
 
-func (v * Vec3f) CrossProduct (o * Vec3f) Vec3f {
+func (v Vec3f) CrossProduct (o Vec3f) Vec3f {
 	return Vec3f{ X: v.Y*o.Z - v.Z*o.Y, Y: v.X*o.Z - v.Z*o.X, Z: v.X*o.Y - v.Y*o.X }
 }
 
-func (v * Vec3f) DotProduct (o * Vec3f) float64 {
+func (v Vec3f) DotProduct (o Vec3f) float64 {
 	return v.X * o.X + v.Y * o.Y + v.Z * o.Z 
 }
 
-func (v * Vec3f) Negative () Vec3f {
+func (v Vec3f) Negative () Vec3f {
 	return Vec3f{ X: - v.X, Y: - v.Y, Z: - v.Z }
 }
 
-func (v * Vec3f) Norm () float64 {
+func (v Vec3f) Norm () float64 {
 	return v.X * v.X + v.Y * v.Y + v.Z * v.Z
 }
 
-func (v * Vec3f) Length () float64 {
+func (v Vec3f) Length () float64 {
 	return math.Sqrt(v.X * v.X + v.Y * v.Y + v.Z * v.Z)
 }
 
@@ -83,7 +83,7 @@ func NewDefinedMatrix (m [4][4]float64) Matrix44f {
 	return Matrix44f{E: m }
 }
 
-func (m * Matrix44f) MultiplyBy (o * Matrix44f) Matrix44f {
+func (m Matrix44f) MultiplyBy (o Matrix44f) Matrix44f {
 	temp := Matrix44f{}
 	for i := 0; i < 4; i++ { 
 		for j := 0; j < 4; j++ { 
@@ -102,7 +102,7 @@ func (m * Matrix44f) TransposeSelf () {
 }
 
 //void multVecMatrix(const Vec3<S> &src, Vec3<S> &dst)
-func (m * Matrix44f) MultiplyVectorMatrix (origin Vec3f, destination * Vec3f) {
+func (m Matrix44f) MultiplyVectorMatrix (origin Vec3f, destination * Vec3f) {
 	x := origin.X * m.E[0][0] + origin.Y * m.E[1][0] + origin.Z * m.E[2][0] + m.E[3][0]
 	y := origin.X * m.E[0][1] + origin.Y * m.E[1][1] + origin.Z * m.E[2][1] + m.E[3][1]
 	z := origin.X * m.E[0][2] + origin.Y * m.E[1][2] + origin.Z * m.E[2][2] + m.E[3][2]
@@ -112,7 +112,7 @@ func (m * Matrix44f) MultiplyVectorMatrix (origin Vec3f, destination * Vec3f) {
 }
 
 //void multDirMatrix(const Vec3<S> &src, Vec3<S> &dst) const
-func (m * Matrix44f) MultiplyDirectionalMatrix (origin Vec3f, destination * Vec3f) {
+func (m Matrix44f) MultiplyDirectionalMatrix (origin Vec3f, destination * Vec3f) {
 	x := origin.X * m.E[0][0] + origin.Y * m.E[1][0] + origin.Z * m.E[2][0]
 	y := origin.X * m.E[0][1] + origin.Y * m.E[1][1] + origin.Z * m.E[2][1]
 	z := origin.X * m.E[0][2] + origin.Y * m.E[1][2] + origin.Z * m.E[2][2]
@@ -121,7 +121,7 @@ func (m * Matrix44f) MultiplyDirectionalMatrix (origin Vec3f, destination * Vec3
 }
 
 //Matrix44 inverse() const 
-func (m * Matrix44f) Inverse () Matrix44f { 
+func (m Matrix44f) Inverse () Matrix44f { 
 	var i, j, k int
 	result := NewIdentityMatrix()
 	mcopy := NewDefinedMatrix(m.E)
