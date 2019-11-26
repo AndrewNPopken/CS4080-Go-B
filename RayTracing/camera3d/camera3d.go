@@ -5,6 +5,7 @@ import (
 	"image"
 	"image/color"
 	"../space3d"
+	"../objects3d"
 )
 
 var Infinity = math.MaxFloat64
@@ -77,20 +78,16 @@ type Light interface {
     Light()
 }
 
-type Object interface {
-	
-}
-
 // This function takes the ray direction and turns it into a color as a placeholder. 
 // Ray direction coordinates are in the range [-1,1].
 // To normalized them, just add 1 and divide the result by 2.
-func CastRay (origin, direction *space3d.Vec3f, objects []Object, lights []Light, options *Options, depth int) color.RGBA {
+func CastRay (origin, direction *space3d.Vec3f, objects []objects3d.Object, lights []Light, options *Options, depth int) color.RGBA {
 	return color.RGBA{uint8(direction.X * 127.5 + 127.5), uint8(direction.Y * 127.5 + 127.5), uint8(direction.Z * 127.5 + 127.5), 255}
 }
 
 // The main render function. This where we iterate over all pixels in the image, generate
 // primary rays and cast these rays into the scene. The content of the framebuffer is returned as an RGBA image
-func Render (camera * Camera, objects []Object, lights []Light, options *Options) *image.RGBA {
+func Render (camera * Camera, objects []objects3d.Object, lights []Light, options *Options) *image.RGBA {
 	//CameraToWorld := space3d.NewIdentityMatrix()
 	framebuffer := image.NewRGBA(image.Rect(0, 0, options.Width, options.Height))
 	scale := math.Tan(DegreeToRadian(options.FieldOfView * 0.5))

@@ -7,11 +7,13 @@ import (
 	"golang.org/x/mobile/event/key"
 	"image"
 	"time"
-	//"image/color"
+	"image/color"
 	"image/draw"
 	"./camera3d"
 	"./space3d"
+	"./objects3d"
 	"fmt"
+	"math/rand"
 	//"math"
 )
 
@@ -55,10 +57,14 @@ func main() {
 		*/
 		
 		//create the scene (objects and lights)
-		var objects []camera3d.Object
+		var objects []objects3d.Object
+		for i:=0;i<10;i++ {
+			objects = append(objects, objects3d.Sphere{Position: space3d.Vec3f{rand.Float64() * 10 + 2, rand.Float64() * 10 + 2, rand.Float64() * 10 + 2}, Radius: rand.Float64() * 2 + 0.5, Color: color.RGBA{uint8(rand.Intn(255)), uint8(rand.Intn(255)), uint8(rand.Intn(255)) * 255, 255}})
+		}
 		var lights []camera3d.Light
 		var camera camera3d.Camera
 		camera.ToWorld = space3d.NewIdentityMatrix()
+		
 		//set up options
 		//var Width, Height, Depth int
 		//var FieldOfView float64
