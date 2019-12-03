@@ -6,8 +6,11 @@ import (
 	"image/color"
 	"../space3d"
 	"../objects3d"
+	"sync"
+	"runtime"
 )
 
+var numCPUs = runtime.NumCPU()
 var Infinity = math.MaxFloat64
 
 func Clamp (low, high, val * float64) float64 {
@@ -38,7 +41,7 @@ type Camera struct {
 }
 
 func (c * Camera) GetPosition() space3d.Vec3f {
-	return space3d.Vec3f{c.ToWorld.E[0][0], c.ToWorld.E[0][1], c.ToWorld.E[0][2]}
+	return space3d.Vec3f{c.ToWorld.E[3][0], c.ToWorld.E[3][1], c.ToWorld.E[3][2]}
 }
 
 func (c * Camera) TurnLeft (rad float64) {
@@ -81,6 +84,14 @@ func (c * Camera) TurnUp (rad float64) {
 
 	x, y, z = c.ToWorld.E[2][0], c.ToWorld.E[2][1], c.ToWorld.E[2][2]
 	c.ToWorld.E[2][0], c.ToWorld.E[2][1], c.ToWorld.E[2][2] = u * (u*x + w*z) * (1 - cos) + x * cos - w * y * sin, y * cos + ( w * x - u * z) * sin, w * (u*x + w*z) * (1 - cos) + z * cos + u * y * sin
+}
+
+func (c * Camera) MoveForward (dist float64) {
+	c.ToWorld.E[3][0], c.ToWorld.E[3][1], c.ToWorld.E[3][2] = c.ToWorld.E[3][0] - dist * c.ToWorld.E[2][0], c.ToWorld.E[3][1] - dist * c.ToWorld.E[2][1], c.ToWorld.E[3][2] - dist * c.ToWorld.E[2][2]
+}
+
+func (c * Camera) MoveLeft (dist float64) {
+	c.ToWorld.E[3][0], c.ToWorld.E[3][1], c.ToWorld.E[3][2] = c.ToWorld.E[3][0] - dist * c.ToWorld.E[0][0], c.ToWorld.E[3][1] - dist * c.ToWorld.E[0][1], c.ToWorld.E[3][2] - dist * c.ToWorld.E[0][2]
 }
 
 type Options struct {
@@ -149,16 +160,28 @@ func Render (camera * Camera, objects []objects3d.Object, lights []Light, option
 	//to world-space using the camera.ToWorld matrix.
 	origin := camera.GetPosition()
 	camera.ToWorld.MultiplyVectorMatrix(space3d.Vec3f{}, &origin)
-	//Linear for now, d==down, r==right
-	for d := 0; d < options.Height; d++ {
+	//now with goroutines!
+	var wg sync.WaitGroup
+	wg.Add(numCPUs)
+	for i := 0; i < numCPUs; i++ {
+		var start, stop int = int(float64(options.Height) * (float64(i) / float64(numCPUs))), int(float64(options.Height) * (float64(i + 1) / float64(numCPUs)))
+		go renderHelper(camera, objects, lights , options, framebuffer, &origin, scale, aspectRatio, start, stop, &wg)
+	}
+	wg.Wait()
+	return framebuffer
+}
+
+//goroutineable meat of the Render func
+func renderHelper(camera * Camera, objects []objects3d.Object, lights []Light, options *Options, framebuffer * image.RGBA, origin * space3d.Vec3f, scale, aspectRatio float64, start, stop int, wg *sync.WaitGroup) {
+	for d := start; d < stop; d++ {
 		for r := 0; r < options.Width; r++ {
 			x := (float64(2 * (r - options.Width / 2) + 1) / float64(options.Width - 1)) * scale
 			y := (1 - float64(2 * d + 1) / float64(options.Height)) * scale / aspectRatio
 			var direction space3d.Vec3f
 			camera.ToWorld.MultiplyDirectionalMatrix(space3d.Vec3f{x, y, -1}, &direction)
 			direction.Normalize()
-			framebuffer.SetRGBA(r, d, CastRay(&origin, &direction, objects, lights, options, options.Depth))
+			framebuffer.SetRGBA(r, d, CastRay(origin, &direction, objects, lights, options, options.Depth))
 		}
 	}
-	return framebuffer
-}
+	wg.Done()
+} 

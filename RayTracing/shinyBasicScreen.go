@@ -108,6 +108,7 @@ func main() {
 		timedelta := time.Since(timelast).Seconds()
 		framecount:= -1
 		lookup, lookdown, lookleft, lookright := false, false, false, false
+		moveforward, movebackward, moveleft, moveright := false, false, false, false
 		eventChannel := make(chan interface{})
 		go func () {
 			for {
@@ -140,6 +141,14 @@ func main() {
 						//fmt.Println(e.Code)
 						if e.Direction == key.DirPress {
 							switch e.Code {
+							case key.CodeW:
+								moveforward = true
+							case key.CodeS:
+								movebackward = true
+							case key.CodeA:
+								moveleft = true
+							case key.CodeD:
+								moveright = true
 							case key.CodeUpArrow:
 								lookup = true
 							case key.CodeDownArrow:
@@ -151,6 +160,14 @@ func main() {
 							}
 						} else if e.Direction == key.DirRelease {
 							switch e.Code {
+							case key.CodeW:
+								moveforward = false
+							case key.CodeS:
+								movebackward = false
+							case key.CodeA:
+								moveleft = false
+							case key.CodeD:
+								moveright = false
 							case key.CodeUpArrow:
 								lookup = false
 							case key.CodeDownArrow:
@@ -178,6 +195,16 @@ func main() {
 				camera.TurnUp(1.5 * timedelta)
 			} else if (!lookup && lookdown){
 				camera.TurnUp(-1.5 * timedelta)
+			}
+			if (moveforward && !movebackward) {
+				camera.MoveForward(1.5 * timedelta)
+			} else if (!moveforward && movebackward) {
+				camera.MoveForward(-1.5 * timedelta)
+			}
+			if (moveleft && !moveright) {
+				camera.MoveLeft(1.5 * timedelta)
+			} else if (!moveleft && moveright) {
+				camera.MoveLeft(-1.5 * timedelta)
 			}
 			
 			timedelta = time.Since(timelast).Seconds()
