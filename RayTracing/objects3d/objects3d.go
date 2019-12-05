@@ -13,9 +13,6 @@ type Object interface {
 	Intersect(origin, direction * space3d.Vec3f) (bool, float64)
 	GetColor() color.RGBA
 	GetSurfaceNormal(pointOfIntersection space3d.Vec3f) space3d.Vec3f
-////The following only matter if we implement textures
-//	GetSurfaceTexturePoint(pointOfIntersection space3d.Vec3f) int, int
-//	GetSurfaceData(pointOfIntersection space3d.Vec3f) space3d.Vec3f, int, int
 }
 
 type Sphere struct {

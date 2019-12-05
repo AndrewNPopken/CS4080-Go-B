@@ -21,6 +21,7 @@ func main() {
 	rand.Seed(time.Now().UnixNano())
 	ScreenWidth, ScreenHeight := 480, 360
 	driver.Main(func(s screen.Screen) {
+	
 		nwo := screen.NewWindowOptions{Title:"Window", Height:ScreenHeight, Width:ScreenWidth}
 		window, err := s.NewWindow(&nwo)
 		if err != nil {
@@ -34,43 +35,10 @@ func main() {
 		}
 		defer buffer.Release()
 		
-		/*
-		rgba := buffer.RGBA()
-		xMax, yMax := rgba.Rect.Max.X, rgba.Rect.Max.Y
-		for x := 0; x < xMax; x++ {
-			for y := 0; y < yMax; y++ {
-				//rgba.Pix[(y-rgba.Rect.Min.Y)*rgba.Stride + (x-rgba.Rect.Min.X)*4]
-//				rgba.Pix[(y)*rgba.Stride + (x)*4]     = 0xff //R
-//				rgba.Pix[(y)*rgba.Stride + (x)*4 + 1] = 0x00 //G
-//				rgba.Pix[(y)*rgba.Stride + (x)*4 + 2] = 0x00 //B
-//				rgba.Pix[(y)*rgba.Stride + (x)*4 + 3] = 0xff //A
-				
-				var c color.RGBA
-				if xd, yd, rMin, rMax := x-240, y-180, 99*99, 10000; xd*xd+yd*yd >= rMin && xd*xd+yd*yd <= rMax {
-					c = color.RGBA{0,0,0,0}
-				} else {
-					c = color.RGBA{uint8( x * 255 / 480 ), uint8(255 - x * 255 / 480 ), uint8( y * 255 / 480 ), 255}
-				}
-				
-				rgba.SetRGBA(x, y, c)
-			}
-		}
-		*/
-		
 		//create the scene (objects and lights)
 		var objects []objects3d.Object
-		for i:=0;i<15;i++ {
-			nextPosition := space3d.Vec3f{rand.Float64() * 20 - 10, rand.Float64() * 3, rand.Float64() * 20 - 10}
-			if nextPosition.X > 0 {
-				nextPosition.X += 3
-			} else {
-				nextPosition.X -= 3
-			}
-			if nextPosition.Z > 0 {
-				nextPosition.Z += 3
-			} else {
-				nextPosition.Z -= 3
-			}
+		for i:=0;i<40;i++ {
+			nextPosition := space3d.Vec3f{rand.Float64() * 20 - 10, rand.Float64() * 20 -10, rand.Float64() * 20 - 10}
 			next := objects3d.Sphere{Position: nextPosition, Radius: rand.Float64() * 2 + 0.5, Color: color.RGBA{uint8(rand.Intn(255)), uint8(rand.Intn(255)), uint8(rand.Intn(255)) * 255, 255}}
 			objects = append(objects, next)
 		}
@@ -197,14 +165,14 @@ func main() {
 				camera.TurnUp(-1.5 * timedelta)
 			}
 			if (moveforward && !movebackward) {
-				camera.MoveForward(1.5 * timedelta)
+				camera.MoveForward(5 * timedelta)
 			} else if (!moveforward && movebackward) {
-				camera.MoveForward(-1.5 * timedelta)
+				camera.MoveForward(-5 * timedelta)
 			}
 			if (moveleft && !moveright) {
-				camera.MoveLeft(1.5 * timedelta)
+				camera.MoveLeft(5 * timedelta)
 			} else if (!moveleft && moveright) {
-				camera.MoveLeft(-1.5 * timedelta)
+				camera.MoveLeft(-5 * timedelta)
 			}
 			
 			timedelta = time.Since(timelast).Seconds()
