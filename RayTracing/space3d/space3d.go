@@ -101,7 +101,6 @@ func (m * Matrix44f) TransposeSelf () {
 	m.E[0][1], m.E[0][2], m.E[0][3], m.E[1][0], m.E[1][2], m.E[1][3], m.E[2][0], m.E[2][1], m.E[2][3], m.E[3][0], m.E[3][1], m.E[3][2] = m.E[1][0], m.E[2][0], m.E[3][0], m.E[0][1], m.E[2][1], m.E[3][1], m.E[0][2], m.E[1][2], m.E[3][2], m.E[0][3], m.E[1][3], m.E[2][3]
 }
 
-//void multVecMatrix(const Vec3<S> &src, Vec3<S> &dst)
 func (m Matrix44f) MultiplyVectorMatrix (origin Vec3f, destination * Vec3f) {
 	x := origin.X * m.E[0][0] + origin.Y * m.E[1][0] + origin.Z * m.E[2][0] + m.E[3][0]
 	y := origin.X * m.E[0][1] + origin.Y * m.E[1][1] + origin.Z * m.E[2][1] + m.E[3][1]
@@ -111,7 +110,6 @@ func (m Matrix44f) MultiplyVectorMatrix (origin Vec3f, destination * Vec3f) {
 	destination.X, destination.Y, destination.Z = x / w, y / w, z / w
 }
 
-//void multDirMatrix(const Vec3<S> &src, Vec3<S> &dst) const
 func (m Matrix44f) MultiplyDirectionalMatrix (origin Vec3f, destination * Vec3f) {
 	x := origin.X * m.E[0][0] + origin.Y * m.E[1][0] + origin.Z * m.E[2][0]
 	y := origin.X * m.E[0][1] + origin.Y * m.E[1][1] + origin.Z * m.E[2][1]
@@ -120,7 +118,6 @@ func (m Matrix44f) MultiplyDirectionalMatrix (origin Vec3f, destination * Vec3f)
 	destination.X, destination.Y, destination.Z = x, y, z
 }
 
-//Matrix44 inverse() const 
 func (m Matrix44f) Inverse () Matrix44f { 
 	var i, j, k int
 	result := NewIdentityMatrix()

@@ -112,22 +112,10 @@ func CastRay (origin, direction *space3d.Vec3f, objects []objects3d.Object, ligh
 	if isHit, hitDist, hitObject := trace(origin, direction, objects); isHit {
 		hitPoint := origin.Plus(direction.MultiplyBy(hitDist))
 		normal := hitObject.GetSurfaceNormal(hitPoint)
-		//placeholder while lights aren't implemented:
-//		reflectDirection := direction.Plus(normal.MultiplyBy(direction.DotProduct(normal) * 2))
-//		reflectColor := color.RGBA{uint8(reflectDirection.X * 127.5 + 127.5), uint8(reflectDirection.Y * 127.5 + 127.5), uint8(reflectDirection.Z * 127.5 + 127.5), 255}
 		reflectDirection := normal
 		reflectColor := color.RGBA{uint8(reflectDirection.X * 127.5 + 127.5), uint8(reflectDirection.Y * 127.5 + 127.5), uint8(reflectDirection.Z * 127.5 + 127.5), 255}
 		hitColor = hitObject.GetColor()
 		hitColor.R, hitColor.G, hitColor.B = uint8(float64(reflectColor.R) * reflectRatio + float64(hitColor.R) * (1 - reflectRatio)), uint8(float64(reflectColor.G) * reflectRatio + float64(hitColor.G) * (1 - reflectRatio)), uint8(float64(reflectColor.B) * reflectRatio + float64(hitColor.B) * (1 - reflectRatio))
-		/*
-		////This may be important later if we add textures
-		// Use the normal and texture coordinates to shade the hit point.
-		// The normal is used to compute a simple facing ratio and the texture coordinate
-		// to compute a basic checker board pattern
-		float scale = 4
-		float pattern = (fmodf(tex.x * scale, 1) > 0.5) ^ (fmodf(tex.y * scale, 1) > 0.5)
-		hitColor = std::max(0.f, Nhit.dotProduct(-dir)) * mix(hitObject->color, hitObject->color * 0.8, pattern)
-		*/
 	}
 	return hitColor
 }

@@ -21,18 +21,6 @@ type Sphere struct {
 	Color color.RGBA
 }
 
-/*
-func (Object ob) BoundingSphere() Sphere {
-	var bounds Sphere
-	//bounds.Position = //rough center of ob //objects either have a recorded center or the means to estimate
-	bounds.Position = ob.Position()
-	//bounds.Radius = //at least the distance from ob's Position to the furthest point in ob's geometry //default to 1
-	bounds.Radius = 1.0
-	return bounds
-}
-*/
-
-
 func (ob Sphere) Intersect (origin, direction * space3d.Vec3f) (bool, float64) {
 	cameraToObject := ob.Position.Minus(*origin)
 	camDirDot := cameraToObject.DotProduct(*direction)
